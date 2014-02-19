@@ -12,34 +12,26 @@ glm::vec3 cubeTran;
 
 GLfloat size=10;
 
-GLfloat vertexarray[]={size,size,-size,
-		       	           size,-size,-size,
-                       -size,-size,-size,
-                       -size,size,-size,
-                       size,size,size,
-                       size,-size,size,
-                       -size,-size,size,
-                       -size,size,size
+GLfloat vertexarray[]={size,-size,-size,
+		       	       size,-size,size,
+					   -size,-size,size,
+                       -size,-size,-size
                        };
 
-GLfloat colorarray[]={1.0f,1.0f,1.0f,1.0f,
-	              			0.5f,1.0f,1.0f,1.0f,
-		      						1.0f,0.5f,1.0f,1.0f,
-		      						1.0f,1.0f,0.5f,1.0f,
-		      						1.0f,1.0f,1.0f,1.0f,
-		      						0.5f,1.0f,1.0f,1.0f,
-		      						1.0f,0.5f,1.0f,1.0f,
-                      1.0f,1.0f,0.5f,1.0f
+GLfloat colorarray[]={1.0f,0.0f,0.0f,1.0f,
+	              	  0.0f,1.0f,0.0f,1.0f,
+		      		  1.0f,1.0f,0.0f,1.0f,
+		      		  0.0f,0.0f,1.0f,1.0f
 	              			};
 											
  GLubyte elems[]={0,1,2,3,7,4,5,6,
-    	          	7,3,0,4,5,6,2,1,
-    		  				0,1,5,4,7,3,2,6
+    	          7,3,0,4,5,6,2,1,
+    		  	  0,1,5,4,7,3,2,6
                  };
 
 void init(){
-	 glEnable(GL_DEPTH_TEST);
-	 glViewport(0, 0, 600, 600);
+	glEnable(GL_DEPTH_TEST);
+	glViewport(0, 0, 600, 600);
 	
 	glGenVertexArrays(1,&vaoID);
 	glBindVertexArray(vaoID);
@@ -50,18 +42,18 @@ void init(){
 	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vboID[1]);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(colorarray),colorarray,GL_STATIC_DRAW);
-  glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-  
-  glGenBuffers(1,&eboID);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,eboID);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(elems),elems,GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,sizeof(colorarray),colorarray,GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	
+	glGenBuffers(1,&eboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,eboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(elems),elems,GL_STATIC_DRAW);
 
 	ShaderInfo shaders[]={
-  { GL_VERTEX_SHADER , "vertexshader.glsl"},
-  { GL_FRAGMENT_SHADER , "fragmentshader.glsl"}, 
-  { GL_NONE , NULL} 
-  };
+		{ GL_VERTEX_SHADER , "vertexshader.glsl"},
+		{ GL_FRAGMENT_SHADER , "fragmentshader.glsl"}, 
+		{ GL_NONE , NULL} 
+	};
 		
   program=initShaders(shaders);
   
@@ -77,11 +69,11 @@ void display(SDL_Window* screen){
 	glm::mat4 trans;
 	
 	trans=glm::translate(trans,cubeTran);//translate the cube
-  trans=glm::rotate(trans,pit,glm::vec3(1,0,0));//rotate the cube around the x axis
-  trans=glm::rotate(trans,yaw,glm::vec3(0,1,0));//rotate the cube arround the y axis
-  trans=glm::scale(trans,glm::vec3(scalar));//scaling the cube
+	trans=glm::rotate(trans,pit,glm::vec3(1,0,0));//rotate the cube around the x axis
+	trans=glm::rotate(trans,yaw,glm::vec3(0,1,0));//rotate the cube arround the y axis
+	trans=glm::scale(trans,glm::vec3(scalar));//scaling the cube
     
-  GLint tempLoc = glGetUniformLocation(program,"modelMatrix");//Matrix that handle the transformations
+	GLint tempLoc = glGetUniformLocation(program,"modelMatrix");//Matrix that handle the transformations
 	glUniformMatrix4fv(tempLoc,1,GL_FALSE,&trans[0][0]);
 	
 	glDrawElements(GL_POLYGON,24,GL_UNSIGNED_BYTE,NULL);
@@ -110,13 +102,6 @@ SDL_Event event;
 					case SDLK_j:yaw+=2;break;
 					case SDLK_l:yaw-=2;break;
 				}
-		/*case SDL_MOUSEMOTION:
-				yaw+=((event.motion.x)-300)/10.0;
-				pit+=((event.motion.y)-300)/10.0;
-				SDL_WarpMouseInWindow(screen,300,300);
-				
-			}
-			*/
 		}
 	}
 }
